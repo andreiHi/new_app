@@ -1,3 +1,5 @@
-<p>
-    <button class="btn btn-primary">Get Topics</button>
-</p>
+<h1>Topic List</h1>
+<button (click)="getTopicList()" class="btn btn-primary">Get Topics</button>
+<ul *ngIf="topicList">
+    <li *ngFor="let topic of topicList">{{ topic }}</li>
+</ul>
