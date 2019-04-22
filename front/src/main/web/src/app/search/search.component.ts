@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient} from '@angular/common/http';
+import { map, flatMap, toArray} from 'rxjs/operators';
 
 @Component({
     selector: 'app-search',
@@ -7,12 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
     topicList: string[];
-    constructor() { }
+    constructor(private http: HttpClient) {
+
+    }
 
     ngOnInit() {
     }
 
     getTopicList(){
-        this.topicList =  ['topic1', 'topic2', 'topic3'];
+       this.http.get<any[]>("http://localhost:8090/topics?searchString=Topic").pipe(
+           flatMap(topics => topics),
+           map(topic => topic.name),
+           toArray()
+       ).subscribe(topics => this.topicList = topics);
     }
 }
