@@ -12,15 +12,16 @@ import java.util.Date;
 
 @Entity
 @Table(name = "topic")
-public class Topic implements Serializable {
+public class Topic extends BaseEntity implements Serializable {
 
     public Topic() {
     }
 
-    @Id
-    @GeneratedValue(generator = Constants.ID_GENERATOR)
-    @Column(nullable = false, unique = true)
-    private Long id;
+//    @Id
+//   // @GeneratedValue(generator = Constants.ID_GENERATOR)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(nullable = false, unique = true)
+//    private Long id;
 
     @Column(name = "name", length = 80)
     private String name;
@@ -33,18 +34,6 @@ public class Topic implements Serializable {
 
     @Column(name = "text_field2", length = 5000)
     private String textField2;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created", length = 19)
-    private Date created;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -78,23 +67,15 @@ public class Topic implements Serializable {
         this.textField2 = textField2;
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Topic{");
-        sb.append("id=").append(id);
+        sb.append("id=").append(super.getId());
         sb.append(", name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", textField1='").append(textField1).append('\'');
         sb.append(", textField2='").append(textField2).append('\'');
-        sb.append(", created=").append(created);
         sb.append('}');
         return sb.toString();
     }

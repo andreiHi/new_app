@@ -17,7 +17,7 @@ public class CrossConfig implements WebMvcConfigurer {
         System.out.println(">=== Inside Cors Orgin Mapping addCorsMappings ===>");
         registry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowedMethods("POST", "GET",  "PUT", "OPTIONS", "DELETE")
+                .allowedMethods("POST", "GET",  "PUT", "OPTIONS", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
