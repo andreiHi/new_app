@@ -1,8 +1,9 @@
 package com.app.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Hincu Andrei (andreih1981@gmail.com)on 22.04.2019.

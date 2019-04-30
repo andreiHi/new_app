@@ -2,6 +2,7 @@ package com.app.entities;
 
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,7 +32,7 @@ public class User extends BaseEntity {
             joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id")}
     )
-    private Set<Role> roles;
+    private List<Role> roles;
 
     public String getUsername() {
         return username;
@@ -73,11 +74,11 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 }

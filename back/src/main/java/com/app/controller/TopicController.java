@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -27,6 +28,7 @@ public class TopicController {
     }
 
     @GetMapping("/topics")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Topic>> searchTopic(@RequestParam(value = "searchString", required = false) String searchString) {
         // return topicRepository.findByDescriptionLikeIgnoreCase("%spring%");
         return ResponseEntity.ok(topicRepository.findByAttributeContainsText("description", searchString));

@@ -1,5 +1,7 @@
 package com.app.exceptions;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.hateoas.VndErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +18,12 @@ import java.util.Optional;
  * @version $Id$.
  * @since 0.1.
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequestMapping
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<VndErrors> notFoundException(final EntityNotFoundException e) {
         return error(e, HttpStatus.NOT_FOUND, e.getLocalizedMessage());
     }
