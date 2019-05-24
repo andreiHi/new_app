@@ -2,8 +2,8 @@ package com.app.entities;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class User
@@ -12,20 +12,28 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseEntity {
 
+    @NotBlank
     @Column(name = "username")
     private String username;
 
+    @NotBlank
     @Column(name = "first_name")
     private String firstName;
 
+    @NotBlank
     @Column(name = "last_name")
     private String lastName;
 
+    @NotBlank
     @Column(name = "email")
     private String email;
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "activate_code")
+    private String activateCode;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
@@ -78,7 +86,28 @@ public class User extends BaseEntity {
         return roles;
     }
 
+    public String getActivateCode() {
+        return activateCode;
+    }
+
+    public void setActivateCode(String activateCode) {
+        this.activateCode = activateCode;
+    }
+
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("username='").append(username).append('\'');
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", activateCode='").append(activateCode).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

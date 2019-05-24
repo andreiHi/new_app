@@ -3,8 +3,6 @@ package com.app.security;
 import com.app.entities.Status;
 import com.app.entities.User;
 import com.app.repository.UserRepository;
-import com.app.security.jwt.JWTUser;
-import com.app.security.jwt.JWTUserFactory;
 import com.app.security.jwt.UserNotActivatedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;

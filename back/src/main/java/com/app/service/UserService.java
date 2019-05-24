@@ -1,19 +1,20 @@
 package com.app.service;
 
+import com.app.controller.vm.ManagedUserVM;
 import com.app.entities.Role;
 import com.app.entities.Status;
 import com.app.entities.User;
+import com.app.exceptions.EmailAlreadyUsedException;
+import com.app.exceptions.LoginAlreadyUsedException;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
-import com.app.service.UserService;
+import com.app.security.AuthoritiesConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Hincu Andrei (andreih1981@gmail.com)on 25.04.2019.
@@ -21,6 +22,7 @@ import java.util.Optional;
  * @since 0.1.
  */
 @Service
+@Transactional
 @Slf4j
 public class UserService {
 
@@ -37,16 +39,44 @@ public class UserService {
     }
 
 
-    public User register(User user) {
-        Role roleUser = this.roleRepository.findByName("ROLE_USER");
-        final List<Role> roles = Arrays.asList(roleUser);
+    public User register(ManagedUserVM userVM) {
+        userRepository.findByUsername(userVM.getLogin().toLowerCase()).ifPresent(user -> {
+            final boolean removed = removeNonActiveUser(user);
+            if (!removed) {
+                throw new LoginAlreadyUsedException();
+            }
+        });
 
-        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        userRepository.findOneByEmailIgnoreCase(userVM.getEmail()).ifPresent(user -> {
+            if (!this.removeNonActiveUser(user)) {
+                throw new EmailAlreadyUsedException();
+            }
+        });
+
+        final List<Role> roles = new ArrayList<>();
+        this.roleRepository.findByName(AuthoritiesConstants.USER).ifPresent(roles::add);
+
+        User user = new User();
+        user.setUsername(userVM.getLogin());
+        user.setFirstName(userVM.getFirstName());
+        user.setLastName(userVM.getLastName());
+        user.setEmail(userVM.getEmail());
+        user.setPassword(this.passwordEncoder.encode(userVM.getPassword()));
         user.setRoles(roles);
-        user.setStatus(Status.ACTIVE);
+        user.setActivateCode(UUID.randomUUID().toString());
+        user.setStatus(Status.NOT_ACTIVE);
         final User registerUser = this.userRepository.save(user);
-        log.info("IN register - user: {} successfully registered" ,registerUser);
+        log.info("IN register - user: {} successfully registered", registerUser);
         return registerUser;
+    }
+
+    private boolean removeNonActiveUser(User user) {
+        if (!user.getStatus().equals(Status.NOT_ACTIVE)) {
+            return false;
+        }
+        this.userRepository.delete(user);
+        this.userRepository.flush();
+        return true;
     }
 
 

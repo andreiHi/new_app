@@ -28,10 +28,26 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return error(e, HttpStatus.NOT_FOUND, e.getLocalizedMessage());
     }
 
+    @ExceptionHandler({InvalidPasswordException.class})
+    public ResponseEntity<VndErrors>invalidPasswordException(final InvalidPasswordException e) {
+        return error(e, HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+    }
+
+    @ExceptionHandler({LoginAlreadyUsedException.class})
+    public ResponseEntity<VndErrors>loginAlreadyUsedException(final InvalidPasswordException e) {
+        return error(e, HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+    }
+
+    @ExceptionHandler({EmailAlreadyUsedException.class})
+    public ResponseEntity<VndErrors>emailAlreadyUsedException(final InvalidPasswordException e) {
+        return error(e, HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+    }
+
     private ResponseEntity<VndErrors> error(
             final Exception exception, final HttpStatus httpStatus, final String logRef) {
         final String message =
                 Optional.of(exception.getMessage()).orElse(exception.getClass().getSimpleName());
         return new ResponseEntity<>(new VndErrors(logRef, message), httpStatus);
     }
+
 }

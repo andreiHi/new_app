@@ -3,8 +3,10 @@ package com.app.configuration;
 import com.app.security.jwt.JwtConfigurer;
 import com.app.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -37,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         this.passwordEncoder = passwordEncoder;
     }
-
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -64,9 +66,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/img").permitAll()
+                .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/**").authenticated()
+                .antMatchers("/topics").permitAll()
                 //.antMatchers("/topics/**").hasAuthority("ROLE_USER")
                // .antMatchers("/topics/**").permitAll()
+//                .anyRequest()
+//                .authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
     }

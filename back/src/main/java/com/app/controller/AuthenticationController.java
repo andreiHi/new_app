@@ -5,6 +5,7 @@ import com.app.security.JwtTokenFilter;
 import com.app.security.jwt.JwtTokenProvider;
 import com.app.service.UserService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version $Id$.
  * @since 0.1.
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/api")
 public class AuthenticationController {
@@ -40,7 +42,7 @@ public class AuthenticationController {
     //todo rememberMe
     @PostMapping("/authenticate")
     public ResponseEntity<JWTToken> login(@RequestBody LoginDto loginDto ) {
-
+        log.info("In Authenticate Login Dto: {}", loginDto);
         final UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
