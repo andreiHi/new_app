@@ -2,34 +2,49 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <property name="now" value="now()" dbms="postgresql"/>
 
+
+    <!--Hibernate: create table base_entity (id int8 not null,-->
+    <!--created timestamp,-->
+    <!--status varchar(255),-->
+    <!--updated timestamp,-->
+    <!--primary key (id))-->
+    <!--Hibernate: create table roles (name varchar(255), id int8 not null, primary key (id))-->
+    <!--Hibernate: create table user_roles (user_id int8 not null, role_id int8 not null)-->
+    <!--Hibernate: create table users (-->
+    <!--activate_code varchar(255),-->
+    <!--email varchar(255) ,-->
+    <!--first_name varchar(255),-->
+    <!--last_name varchar(255),-->
+    <!--password varchar(255),-->
+    <!--username varchar(255),-->
+    <!--id int8 not null, primary key (id))-->
+    <!--Hibernate: create table topic (description varchar(5000),-->
+    <!--name varchar(80),-->
+    <!--text_field1 varchar(5000),-->
+    <!--text_field2 varchar(5000),-->
+    <!--id int8 not null,-->
+    <!--primary key (id))-->
+    <!--Hibernate: create sequence jpwh_sequence start 1000 increment 1-->
+    <!--Hibernate: alter table if exists user_roles add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 foreign key (role_id) references roles-->
+    <!--Hibernate: alter table if exists user_roles add constraint FKhfh9dx7w3ubf1co1vdev94g3f foreign key (user_id) references users-->
+    <!--Hibernate: alter table if exists roles add constraint FKdb01lkth9jl53jgk5ivo6xrcn foreign key (id) references base_entity-->
+    <!--Hibernate: alter table if exists topic add constraint FK7x5mfwe0jj9fst6jvpvdg8ea1 foreign key (id) references base_entity-->
+    <!--Hibernate: alter table if exists users add constraint FKfmjtxiovugn4eyvyvyevdypac foreign key (id) references base_entity-->
+    <!---->
     <changeSet id="1.0.0" author="Hincu A">
-        <createTable tableName="users">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="username" type="VARCHAR(100)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="email" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="first_name" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="last_name" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="password" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+        <createTable tableName="base_entity">
+            <column autoIncrement="false" name="id" type="int8">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
             </column>
             <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+            <column name="created" type="TIMESTAMP" defaultValue="${now}">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+            <column name="updated" type="TIMESTAMP" defaultValue="${now}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -37,34 +52,67 @@
 
     <changeSet id="1.0.1" author="Hincu A">
         <createTable tableName="roles">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+            <column autoIncrement="true" name="id" type="int8">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(100)">
                 <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
-                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="1.0.2" author="Hincu A">
         <createTable tableName="user_roles">
-            <column name="user_id" type="BIGINT">
+            <column name="user_id" type="int8">
+                <constraints nullable="false"/>
             </column>
-            <column name="role_id" type="BIGINT">
+            <column name="role_id" type="int8">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="1.0.3" author="Hincu A">
+        <createTable tableName="users">
+            <column autoIncrement="false" name="id" type="int8">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="activate_code" type="varchar(255)"/>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(255)"/>
+            <column name="last_name" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.4" author="Hincu A">
+        <createTable tableName="topic">
+            <column autoIncrement="false" name="id" type="int8">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(80)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(5000)"/>
+            <column name="text_field1" type="VARCHAR(5000)"/>
+            <column name="text_field2" type="VARCHAR(5000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Hincu A" id="1.0.5">
+        <createSequence incrementBy="1"
+                        schemaName="public"
+                        sequenceName="jpwh_sequence"
+                        startValue="1000"/>
+    </changeSet>
+
+    <changeSet id="1.0.6" author="Hincu A">
         <addForeignKeyConstraint baseTableName="user_roles"
                                  baseColumnNames="user_id"
                                  constraintName="fk_user_roles_user"
@@ -75,7 +123,7 @@
         />
     </changeSet>
 
-    <changeSet id="1.0.4" author="Hincu A">
+    <changeSet id="1.0.7" author="Hincu A">
         <addForeignKeyConstraint baseTableName="user_roles"
                                  baseColumnNames="role_id"
                                  constraintName="fk_user_roles_roles"
@@ -86,55 +134,59 @@
         />
     </changeSet>
 
-    <changeSet id="1.0.5" author="Hincu A">
-        <insert tableName="roles">
-            <column name="name" value="ROLE_USER"/>
-        </insert>
-        <insert tableName="roles">
-            <column name="name" value="ROLE_ADMIN"/>
-        </insert>
-    </changeSet>
-
-    <changeSet id="1.0.6" author="Hincu A">
-        <createTable tableName="topic">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="VARCHAR(80)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="description" type="VARCHAR(5000)"/>
-            <column name="text_field1" type="VARCHAR(5000)"/>
-            <column name="text_field2" type="VARCHAR(5000)"/>
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="1.0.7" author="Hincu A">
-        <insert tableName="topic">
-            <column name="name" value="First Topic"/>
-            <column name="description" value="Topic is very good"/>
-        </insert>
-        <insert tableName="topic">
-            <column name="name" value="Second Topic"/>
-            <column name="description" value="Topic is very good"/>
-        </insert>
-    </changeSet>
-
     <changeSet id="1.0.8" author="Hincu A">
-        <addColumn tableName="users">
-            <column name="activate_code" type="VARCHAR(255)"/>
-        </addColumn>
+        <addForeignKeyConstraint baseTableName="roles"
+                                 baseColumnNames="id"
+                                 constraintName="fk_roles_base_entity"
+                                 referencedTableName="base_entity"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+        />
     </changeSet>
 
+    <changeSet id="1.0.9" author="Hincu A">
+        <addForeignKeyConstraint baseTableName="topic"
+                                 baseColumnNames="id"
+                                 constraintName="fk_topic_base_entity"
+                                 referencedTableName="base_entity"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+        />
+    </changeSet>
+
+    <changeSet id="1.1.0" author="Hincu A">
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="id"
+                                 constraintName="fk_users_base_entity"
+                                 referencedTableName="base_entity"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+        />
+    </changeSet>
+
+    <!--<changeSet id="1.1.1" author="Hincu A">-->
+        <!--<insert tableName="roles">-->
+
+            <!--<column name="name" value="ROLE_USER"/>-->
+        <!--</insert>-->
+        <!--<insert tableName="roles">-->
+            <!--<column name="name" value="ROLE_ADMIN"/>-->
+        <!--</insert>-->
+    <!--</changeSet>-->
+
+    <!--<changeSet id="1.1.2" author="Hincu A">-->
+        <!--<insert tableName="topic">-->
+            <!--<column name="name" value="First Topic"/>-->
+            <!--<column name="description" value="Topic is very good"/>-->
+        <!--</insert>-->
+        <!--<insert tableName="topic">-->
+            <!--<column name="name" value="Second Topic"/>-->
+            <!--<column name="description" value="Topic is very good"/>-->
+        <!--</insert>-->
+    <!--</changeSet>-->
 </databaseChangeLog>
 
 

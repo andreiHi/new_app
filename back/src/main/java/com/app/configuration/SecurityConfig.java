@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         this.passwordEncoder = passwordEncoder;
     }
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
