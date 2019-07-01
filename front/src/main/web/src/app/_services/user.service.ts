@@ -10,10 +10,10 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UserService {
-SERVER_API_URL = 'http://localhost:8090';
+SERVER_API_URL = 'http://localhost:8080';
   constructor(private http: HttpClient) { }
 
     register(user: User): Observable<any> {
-      return this.http.post(this.SERVER_API_URL + '/api/register', user, httpOptions);
+      return this.http.post('/api/register', user, httpOptions);
     }
 }

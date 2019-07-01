@@ -8,6 +8,7 @@ import { map, flatMap, toArray} from 'rxjs/operators';
     styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+    SERVER_API_URL = 'http://localhost:8080';
     topicList: string[];
     constructor(private http: HttpClient) {
 
@@ -17,7 +18,7 @@ export class SearchComponent implements OnInit {
     }
 
     getTopicList(){
-       this.http.get<any[]>("http://localhost:8090/topics?searchString=Topic").pipe(
+       this.http.get<any[]>("/topics?searchString=Topic").pipe(
            flatMap(topics => topics),
            map(topic => topic.name),
            toArray()
