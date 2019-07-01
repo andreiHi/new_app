@@ -33,139 +33,189 @@
     <!--Hibernate: alter table if exists topic add constraint FK7x5mfwe0jj9fst6jvpvdg8ea1 foreign key (id) references base_entity-->
     <!--Hibernate: alter table if exists users add constraint FKfmjtxiovugn4eyvyvyevdypac foreign key (id) references base_entity-->
     <!---->
-    <changeSet id="1.0.0" author="Hincu A">
-        <createTable tableName="base_entity">
-            <column autoIncrement="false" name="id" type="int8">
-                <constraints primaryKey="true" unique="true" nullable="false"/>
-            </column>
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created" type="TIMESTAMP" defaultValue="${now}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated" type="TIMESTAMP" defaultValue="${now}">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+    <changeSet id="create_all_sequences" author="Hincu A">
+        <sqlFile dbms="postgresql" splitStatements="true" path="liquibase/sql/sequence/SEQUENCE.sql"/>
+        <rollback>
+            DROP SEQUENCE jpwh_sequence;
+        </rollback>
     </changeSet>
 
-    <changeSet id="1.0.1" author="Hincu A">
-        <createTable tableName="roles">
-            <column autoIncrement="true" name="id" type="int8">
-                <constraints primaryKey="true" unique="true" nullable="false"/>
-            </column>
-            <column name="name" type="VARCHAR(100)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
+    <changeSet id="create_all_tables" author="Hincu A">
+       <sqlFile dbms="postgresql" splitStatements="true" path="liquibase/sql/table/ALL_TABLE.sql"/>
+       <rollback>
+           DROP TABLE base_entity CASCADE CONSTRAINTS;
+       </rollback>
+   </changeSet>
+
+    <changeSet id="create_all_foreign" author="Hincu A">
+       <sqlFile dbms="postgresql" splitStatements="true" path="liquibase/sql/constraint/KEYS.sql"/>
+       <rollback>
+           DROP TABLE base_entity CASCADE CONSTRAINTS;
+       </rollback>
+   </changeSet>
+
+    <changeSet id="create_func" author="Hincu A">
+        <sqlFile dbms="postgresql" splitStatements="false" path="liquibase/sql/functions/ADD_ROLES.sql"/>
+        <!--<rollback>-->
+        <!--DROP TABLE base_entity CASCADE CONSTRAINTS;-->
+        <!--</rollback>-->
     </changeSet>
 
-    <changeSet id="1.0.2" author="Hincu A">
-        <createTable tableName="user_roles">
-            <column name="user_id" type="int8">
-                <constraints nullable="false"/>
-            </column>
-            <column name="role_id" type="int8">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+    <changeSet id="call_procedure" author="Hincu A">
+       <sqlFile dbms="postgresql" splitStatements="true" path="liquibase/sql/functions/CALL_FUNCTION_01.sql"/>
+       <!--<rollback>-->
+           <!--DROP TABLE base_entity CASCADE CONSTRAINTS;-->
+       <!--</rollback>-->
+   </changeSet>
+
+
+    <changeSet id="create_func_to_insert_test_topic" author="Hincu A">
+        <sqlFile dbms="postgresql" splitStatements="false" path="liquibase/sql/functions/ADD_TEST_TOPIC.sql"/>
+        <!--<rollback>-->
+        <!--DROP ;-->
+        <!--</rollback>-->
     </changeSet>
 
-    <changeSet id="1.0.3" author="Hincu A">
-        <createTable tableName="users">
-            <column autoIncrement="false" name="id" type="int8">
-                <constraints primaryKey="true" unique="true" nullable="false"/>
-            </column>
-            <column name="activate_code" type="varchar(255)"/>
-            <column name="email" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="first_name" type="varchar(255)"/>
-            <column name="last_name" type="varchar(255)"/>
-            <column name="password" type="varchar(255)"/>
-            <column name="username" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-
-        </createTable>
+    <changeSet id="insert_test_topic" author="Hincu A">
+        <sqlFile dbms="postgresql" splitStatements="true" path="liquibase/sql/functions/INSERT_TOPIC.sql"/>
+        <!--<rollback>-->
+        <!--DROP TABLE base_entity CASCADE CONSTRAINTS;-->
+        <!--</rollback>-->
     </changeSet>
 
-    <changeSet id="1.0.4" author="Hincu A">
-        <createTable tableName="topic">
-            <column autoIncrement="false" name="id" type="int8">
-                <constraints primaryKey="true" unique="true" nullable="false"/>
-            </column>
-            <column name="name" type="VARCHAR(80)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="description" type="VARCHAR(5000)"/>
-            <column name="text_field1" type="VARCHAR(5000)"/>
-            <column name="text_field2" type="VARCHAR(5000)"/>
-        </createTable>
-    </changeSet>
+    <!--<changeSet id="1.0.0" author="Hincu A">-->
+        <!--<createTable tableName="base_entity">-->
+            <!--<column autoIncrement="false" name="id" type="int8">-->
+                <!--<constraints primaryKey="true" unique="true" nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="created" type="TIMESTAMP" defaultValue="${now}">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="updated" type="TIMESTAMP" defaultValue="${now}">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</createTable>-->
+    <!--</changeSet>-->
 
-    <changeSet author="Hincu A" id="1.0.5">
-        <createSequence incrementBy="1"
-                        schemaName="public"
-                        sequenceName="jpwh_sequence"
-                        startValue="1000"/>
-    </changeSet>
+    <!--<changeSet id="1.0.1" author="Hincu A">-->
+        <!--<createTable tableName="roles">-->
+            <!--<column autoIncrement="false" name="id" type="int8">-->
+                <!--<constraints primaryKey="true" unique="true" nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="name" type="VARCHAR(100)">-->
+                <!--<constraints nullable="false" unique="true"/>-->
+            <!--</column>-->
+        <!--</createTable>-->
+    <!--</changeSet>-->
 
-    <changeSet id="1.0.6" author="Hincu A">
-        <addForeignKeyConstraint baseTableName="user_roles"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_user_roles_user"
-                                 referencedTableName="users"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-        />
-    </changeSet>
+    <!--<changeSet id="1.0.2" author="Hincu A">-->
+        <!--<createTable tableName="user_roles">-->
+            <!--<column name="user_id" type="int8">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="role_id" type="int8">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</createTable>-->
+    <!--</changeSet>-->
 
-    <changeSet id="1.0.7" author="Hincu A">
-        <addForeignKeyConstraint baseTableName="user_roles"
-                                 baseColumnNames="role_id"
-                                 constraintName="fk_user_roles_roles"
-                                 referencedTableName="roles"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-        />
-    </changeSet>
+    <!--<changeSet id="1.0.3" author="Hincu A">-->
+        <!--<createTable tableName="users">-->
+            <!--<column autoIncrement="false" name="id" type="int8">-->
+                <!--<constraints primaryKey="true" unique="true" nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="activate_code" type="varchar(255)"/>-->
+            <!--<column name="email" type="varchar(255)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="first_name" type="varchar(255)"/>-->
+            <!--<column name="last_name" type="varchar(255)"/>-->
+            <!--<column name="password" type="varchar(255)"/>-->
+            <!--<column name="username" type="varchar(255)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
 
-    <changeSet id="1.0.8" author="Hincu A">
-        <addForeignKeyConstraint baseTableName="roles"
-                                 baseColumnNames="id"
-                                 constraintName="fk_roles_base_entity"
-                                 referencedTableName="base_entity"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-        />
-    </changeSet>
+        <!--</createTable>-->
+    <!--</changeSet>-->
 
-    <changeSet id="1.0.9" author="Hincu A">
-        <addForeignKeyConstraint baseTableName="topic"
-                                 baseColumnNames="id"
-                                 constraintName="fk_topic_base_entity"
-                                 referencedTableName="base_entity"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-        />
-    </changeSet>
+    <!--<changeSet id="1.0.4" author="Hincu A">-->
+        <!--<createTable tableName="topic">-->
+            <!--<column autoIncrement="false" name="id" type="int8">-->
+                <!--<constraints primaryKey="true" unique="true" nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="name" type="VARCHAR(80)">-->
+                <!--<constraints nullable="false" unique="true"/>-->
+            <!--</column>-->
+            <!--<column name="description" type="VARCHAR(5000)"/>-->
+            <!--<column name="text_field1" type="VARCHAR(5000)"/>-->
+            <!--<column name="text_field2" type="VARCHAR(5000)"/>-->
+        <!--</createTable>-->
+    <!--</changeSet>-->
 
-    <changeSet id="1.1.0" author="Hincu A">
-        <addForeignKeyConstraint baseTableName="users"
-                                 baseColumnNames="id"
-                                 constraintName="fk_users_base_entity"
-                                 referencedTableName="base_entity"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-        />
-    </changeSet>
+    <!--<changeSet author="Hincu A" id="1.0.5">-->
+        <!--<createSequence incrementBy="1"-->
+                        <!--schemaName="public"-->
+                        <!--sequenceName="jpwh_sequence"-->
+                        <!--startValue="1000"/>-->
+    <!--</changeSet>-->
+
+    <!--<changeSet id="1.0.6" author="Hincu A">-->
+        <!--<addForeignKeyConstraint baseTableName="user_roles"-->
+                                 <!--baseColumnNames="user_id"-->
+                                 <!--constraintName="fk_user_roles_user"-->
+                                 <!--referencedTableName="users"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--onDelete="CASCADE"-->
+                                 <!--onUpdate="RESTRICT"-->
+        <!--/>-->
+    <!--</changeSet>-->
+
+    <!--<changeSet id="1.0.7" author="Hincu A">-->
+        <!--<addForeignKeyConstraint baseTableName="user_roles"-->
+                                 <!--baseColumnNames="role_id"-->
+                                 <!--constraintName="fk_user_roles_roles"-->
+                                 <!--referencedTableName="roles"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--onDelete="CASCADE"-->
+                                 <!--onUpdate="RESTRICT"-->
+        <!--/>-->
+    <!--</changeSet>-->
+
+    <!--<changeSet id="1.0.8" author="Hincu A">-->
+        <!--<addForeignKeyConstraint baseTableName="roles"-->
+                                 <!--baseColumnNames="id"-->
+                                 <!--constraintName="fk_roles_base_entity"-->
+                                 <!--referencedTableName="base_entity"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--onDelete="CASCADE"-->
+                                 <!--onUpdate="RESTRICT"-->
+        <!--/>-->
+    <!--</changeSet>-->
+
+    <!--<changeSet id="1.0.9" author="Hincu A">-->
+        <!--<addForeignKeyConstraint baseTableName="topic"-->
+                                 <!--baseColumnNames="id"-->
+                                 <!--constraintName="fk_topic_base_entity"-->
+                                 <!--referencedTableName="base_entity"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--onDelete="CASCADE"-->
+                                 <!--onUpdate="RESTRICT"-->
+        <!--/>-->
+    <!--</changeSet>-->
+
+    <!--<changeSet id="1.1.0" author="Hincu A">-->
+        <!--<addForeignKeyConstraint baseTableName="users"-->
+                                 <!--baseColumnNames="id"-->
+                                 <!--constraintName="fk_users_base_entity"-->
+                                 <!--referencedTableName="base_entity"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--onDelete="CASCADE"-->
+                                 <!--onUpdate="RESTRICT"-->
+        <!--/>-->
+    <!--</changeSet>-->
 
     <!--<changeSet id="1.1.1" author="Hincu A">-->
         <!--<insert tableName="roles">-->

@@ -19,8 +19,8 @@ import java.util.Date;
 public class BaseEntity {
 
     @Id
-    @GeneratedValue(generator = Constants.ID_GENERATOR)
-  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = Constants.ID_GENERATOR, strategy = GenerationType.SEQUENCE)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @CreatedDate
